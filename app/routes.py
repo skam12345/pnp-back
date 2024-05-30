@@ -7,10 +7,10 @@ bp = Blueprint('main', __name__)
 
 def get_db_connection():
     connection = pymysql.connect(
-        host='43.203.19.151',
-        port=56881,
+        host='pnpdb.ctmkgk4os29w.ap-northeast-2.rds.amazonaws.com',
+        port=3306,
         user='root',
-        password='!@Xkzhdizl12',
+        password='xkzhdizl12',
         db='pnpDB',
         charset='utf8'
     )

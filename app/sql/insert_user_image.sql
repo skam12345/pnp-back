@@ -1,2 +1,2 @@
 INSERT INTO userImageTable(uploadImgUrl, userId)
-VALUES (?, ?);
+VALUES (%s, %s);

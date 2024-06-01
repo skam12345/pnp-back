@@ -1,3 +1,3 @@
 SELECT uploadImgUrl
 FROM userImageTable
-WHERE userId = ?;
+WHERE userId = %s;

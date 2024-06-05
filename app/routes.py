@@ -85,5 +85,38 @@ def read_all_img():
         'data': result,
         'message': 'Read Data Successfully'
     })
+
+@bp.route('/write-poem', methods=['POST'])
+def write_poem():
+    data = request.json
+    title = data.get('title')
+    content = data.get('content')
+    writer = data.get('writer')
+    id= data.get('id')
+    
+    if not title or not content or not writer or not id:
+        return jsonify({'code': 101, 'message': 'Missing title or content or writer or id'})
+    
+    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'write_poem.sql')
+    write_poem = load_sql(sql_file_path)
+    
+    connection = get_db_connection()
+    
+    try:
+        with connection.cursor() as corsor:
+            corsor.execute(write_poem, (title, content, writer, id))
+            connection.commit()
+    except:
+        return jsonify({
+            'code': 501,
+            'message': 'Sql Error from occured that wrong some parameters'
+        })
+    finally:
+        connection.close()
+    
+    return jsonify({
+        'code': 200,
+        'message': 'Write Data Successfully'
+    })
     
     

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import pymysql
 import os
-import json
+import constant
 
 bp = Blueprint('main', __name__)
 
@@ -107,7 +107,7 @@ def write_poem():
             corsor.execute(write_poem, (title, content, writer, id))
             connection.commit()
     except:
-        return jsonify({
+        return jsonify({ 
             'code': 501,
             'message': 'Sql Error from occured that wrong some parameters'
         })
@@ -118,6 +118,65 @@ def write_poem():
         'code': 200,
         'message': 'Write Data Successfully'
     })
+
+@bp.route('/read-paging-poem', methods=['POST'])
+def read_paging_poem():
+    data = request.json
+    id = data.get('id')
+    page = data.get('page')
+    
+    if not id or not page:
+        return jsonify({'code': 101, 'message': 'Missing id or page'})
+
+    
+    
+    sql_paging_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_paging_poem.sql')
+    sql_read_all_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_all_poem.sql')
+    read_paging_poem = load_sql(sql_paging_path)
+    read_all_poem = load_sql(sql_read_all_path)
+    
+    connection = get_db_connection()
+    
+    result = []
+    page_count = 0
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(read_all_poem)
+            all_poem = cursor.fetchone()
+            number_all_poem  = int(all_poem[0])
+            first = (int(page) -1) * constant.POEM_LIMIT
+            last = (first + constant.POEM_LIMIT) - 1 
+            
+            if last > number_all_poem:
+                last = number_all_poem
+            
+            page_count = number_all_poem / constant.POEM_LIMIT
+            
+            if number_all_poem % constant.POEM_LIMIT > 0:
+                page_count += 1
+            
+            cursor.execute(read_paging_poem, (id, first, last))
+            for data in cursor.fetchall():
+                result.append(data)
+    except:
+        return jsonify({
+                'code': 501,
+                'message': 'Sql Error from occured that wrong some parameters'
+            })
+    finally:
+        connection.close()
+    
+    return jsonify({
+        'code': 200,
+        'data': {
+            'poem': result,
+            'page_count': page_count
+        },
+        'message': 'Read Data Successfully'
+    })
+    
+    
+    
     
     
      

@@ -1,0 +1,1 @@
+SELECT COUNT(poemSeq) FROM userPoemTable;

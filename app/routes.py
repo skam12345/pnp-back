@@ -180,11 +180,6 @@ LIMIT %s OFFSET %s;""", (id, first, last))
             print('여긴 돌아갔나요?')
             for data in cursor.fetchall():
                 result.append(data)
-    except:
-        return jsonify({
-                'code': 501,
-                'message': 'Sql Error from occured that wrong some parameters'
-            })
     finally:
         connection.close()
     

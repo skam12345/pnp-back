@@ -1,1 +1,1 @@
-SELECT poemSeq, title, writer, write_date, views, goods from userPoemTable WHERE id = %s ORDER BY poemSeq LIMIT %d,  %d;
+SELECT poemSeq, title, writer, write_date, views, goods from userPoemTable WHERE id = %s  LIMIT %d,  %d;

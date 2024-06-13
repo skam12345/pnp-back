@@ -156,10 +156,7 @@ def read_paging_poem():
             
             page_group = math.ceil(int(page) / VIEW_PAGE_LIMIT)
             
-            print(number_all_poem / POEM_LIMIT)
-            if number_all_poem / POEM_LIMIT == 0:
-                all_count_page += 1
-            else:
+            if math.ceil(number_all_poem / POEM_LIMIT) == 0:
                 all_count_page += 1
             if all_count_page - (VIEW_PAGE_LIMIT - 1) <= 0:
                 first_paging = 1

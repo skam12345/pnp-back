@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import pymysql
 import os
-from constant import POEM_LIMIT, VIEW_PAGE_LIMIT
+from app.constant import POEM_LIMIT, VIEW_PAGE_LIMIT
 import math
 
 

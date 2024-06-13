@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 import pymysql
 import os
 import constant
+import math
+
 
 bp = Blueprint('main', __name__)
 
@@ -138,22 +140,38 @@ def read_paging_poem():
     connection = get_db_connection()
     
     result = []
-    page_count = 0
+    first_paging = 0
+    last_paging= 0
     try:
         with connection.cursor() as cursor:
             cursor.execute(read_all_poem)
             all_poem = cursor.fetchone()
             number_all_poem  = int(all_poem[0])
             first = (int(page) -1) * constant.POEM_LIMIT
-            last = (first + constant.POEM_LIMIT) - 1 
+            last = math(first + constant.POEM_LIMIT) - 1 
             
             if last > number_all_poem:
                 last = number_all_poem
             
-            page_count = number_all_poem / constant.POEM_LIMIT
+            all_count_page = math.ceil(number_all_poem / constant.POEM_LIMIT)
+            
+            page_group = math.ceil(int(page) / constant.VIEW_PAGE_LIMIT)
+            
             
             if number_all_poem % constant.POEM_LIMIT > 0:
-                page_count += 1
+                all_count_page += 1
+            if number_all_poem / constant.POEM_LIMIT == 0:
+                all_count_page += 1
+            
+            if all_count_page - (constant.VIEW_PAGE_LIMIT - 1) <= 0:
+                first_paging = 1
+            else :
+                first_paging = all_count_page - (constant.VIEW_PAGE_LIMIT - 1)
+            
+            if page_group * constant.VIEW_PAGE_LIMIT > all_count_page:
+                last_paging = all_count_page
+            else :
+                last_paging = page_group * constant.VIEW_PAGE_LIMIT
             
             cursor.execute(read_paging_poem, (id, first, last))
             for data in cursor.fetchall():
@@ -170,7 +188,8 @@ def read_paging_poem():
         'code': 200,
         'data': {
             'poem': result,
-            'page_count': page_count
+            'first_paging': first_paging,
+            'last_paging': last_paging
         },
         'message': 'Read Data Successfully'
     })

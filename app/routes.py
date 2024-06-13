@@ -173,7 +173,10 @@ def read_paging_poem():
             else :
                 last_paging = page_group * VIEW_PAGE_LIMIT
             
-            cursor.execute(read_paging_poem, (id, first, last))
+            cursor.execute("""
+                           SELECT poemSeq, title, writer, write_date, views, goods 
+from userPoemTable WHERE id = %s  
+LIMIT %s OFFSET %s;""", (id, first, last))
             print('여긴 돌아갔나요?')
             for data in cursor.fetchall():
                 result.append(data)

@@ -174,8 +174,15 @@ def read_paging_poem():
             
             cursor.execute(read_paging_poem, (id, first, last))
             for data in cursor.fetchall():
-                result.append(data)
-                print(data)
+                result.append({
+                    'poemSeq': data[0],
+                    'title': data[1],
+                    'writer': data[2],
+                    'write_data': data[3],
+                    'views': data[4],
+                    'goods': data[5],
+                })
+                    
     except:
         return jsonify({
                 'code': 501,

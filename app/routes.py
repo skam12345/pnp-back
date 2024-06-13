@@ -145,11 +145,10 @@ def read_paging_poem():
     try:
         with connection.cursor() as cursor:
             cursor.execute(read_all_poem)
-            print('여긴 돌아갔어요!')
             all_poem = cursor.fetchone()
             number_all_poem  = int(all_poem[0])
             first = (int(page) -1) * POEM_LIMIT
-            last = math(first + POEM_LIMIT) - 1 
+            last = first + POEM_LIMIT - 1 
             if last > number_all_poem:
                 last = number_all_poem
             
@@ -173,13 +172,14 @@ def read_paging_poem():
             else :
                 last_paging = page_group * VIEW_PAGE_LIMIT
             
-            cursor.execute("""
-                           SELECT poemSeq, title, writer, write_date, views, goods 
-from userPoemTable WHERE id = %s  
-LIMIT %s OFFSET %s;""", (id, first, last))
-            print('여긴 돌아갔나요?')
+            cursor.execute(read_paging_poem, (id, first, last))
             for data in cursor.fetchall():
                 result.append(data)
+    except:
+        return jsonify({
+                'code': 501,
+                'message': 'Sql Error from occured that wrong some parameters'
+            })
     finally:
         connection.close()
     

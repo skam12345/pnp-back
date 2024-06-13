@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import pymysql
 import os
-import constant
+from constant import POEM_LIMIT, VIEW_PAGE_LIMIT
 import math
 
 
@@ -147,31 +147,31 @@ def read_paging_poem():
             cursor.execute(read_all_poem)
             all_poem = cursor.fetchone()
             number_all_poem  = int(all_poem[0])
-            first = (int(page) -1) * constant.POEM_LIMIT
-            last = math(first + constant.POEM_LIMIT) - 1 
+            first = (int(page) -1) * POEM_LIMIT
+            last = math(first + POEM_LIMIT) - 1 
             
             if last > number_all_poem:
                 last = number_all_poem
             
-            all_count_page = math.ceil(number_all_poem / constant.POEM_LIMIT)
+            all_count_page = math.ceil(number_all_poem / POEM_LIMIT)
             
-            page_group = math.ceil(int(page) / constant.VIEW_PAGE_LIMIT)
+            page_group = math.ceil(int(page) / VIEW_PAGE_LIMIT)
             
             
-            if number_all_poem % constant.POEM_LIMIT > 0:
+            if number_all_poem % POEM_LIMIT > 0:
                 all_count_page += 1
-            if number_all_poem / constant.POEM_LIMIT == 0:
+            if number_all_poem / POEM_LIMIT == 0:
                 all_count_page += 1
             
-            if all_count_page - (constant.VIEW_PAGE_LIMIT - 1) <= 0:
+            if all_count_page - (VIEW_PAGE_LIMIT - 1) <= 0:
                 first_paging = 1
             else :
-                first_paging = all_count_page - (constant.VIEW_PAGE_LIMIT - 1)
+                first_paging = all_count_page - (VIEW_PAGE_LIMIT - 1)
             
-            if page_group * constant.VIEW_PAGE_LIMIT > all_count_page:
+            if page_group * VIEW_PAGE_LIMIT > all_count_page:
                 last_paging = all_count_page
             else :
-                last_paging = page_group * constant.VIEW_PAGE_LIMIT
+                last_paging = page_group * VIEW_PAGE_LIMIT
             
             cursor.execute(read_paging_poem, (id, first, last))
             for data in cursor.fetchall():

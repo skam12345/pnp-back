@@ -207,7 +207,7 @@ def read_one_poem():
     if not poemSeq:
         return jsonify({'code': 101, 'message': 'Missing poemSeq'})
     
-    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_one_poem')
+    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_one_poem.sql')
     write_poem = load_sql(sql_file_path)
     
     connection = get_db_connection()

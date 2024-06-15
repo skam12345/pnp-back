@@ -211,11 +211,19 @@ def read_one_poem():
     write_poem = load_sql(sql_file_path)
     
     connection = get_db_connection()
-    result = None
+    result = {}
     try:
         with connection.cursor() as corsor:
             corsor.execute(write_poem, (poemSeq))
-            result = corsor.fetchone()[0]
+            data = corsor.fetchone()
+            result = {
+                'poemSeq': data[0],
+                'title': data[1],
+                'content': data[2],
+                'writer': data[3],
+                'id': data[4],
+            }
+            
     except:
         return jsonify({ 
             'code': 501,

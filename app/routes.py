@@ -198,6 +198,37 @@ def read_paging_poem():
         },
         'message': 'Read Data Successfully'
     })
+
+@bp.route('/read-one-poem', methods=['POST'])
+def read_one_poem():
+    data = request.json
+    poemSeq = data.get('poemSeq')
+    
+    if not poemSeq:
+        return jsonify({'code': 101, 'message': 'Missing poemSeq'})
+    
+    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_one_poem')
+    write_poem = load_sql(sql_file_path)
+    
+    connection = get_db_connection()
+    result = None
+    try:
+        with connection.cursor() as corsor:
+            corsor.execute(write_poem, (poemSeq))
+            result = corsor.fetchone()[0]
+    except:
+        return jsonify({ 
+            'code': 501,
+            'message': 'Sql Error from occured that wrong some parameters'
+        })
+    finally:
+        connection.close()
+    
+    return jsonify({
+        'code': 200,
+        'data': result,
+        'message': 'Read Data Successfully'
+    })
     
     
     

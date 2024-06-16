@@ -3,6 +3,7 @@ import pymysql
 import os
 from app.constant import POEM_LIMIT, VIEW_PAGE_LIMIT
 import math
+from datetime import date
 
 
 bp = Blueprint('main', __name__)
@@ -95,9 +96,10 @@ def write_poem():
     content = data.get('content')
     writer = data.get('writer')
     id= data.get('id')
+    write_date = date.today()
     
     if not title or not content or not writer or not id:
-        return jsonify({'code': 101, 'message': 'Missing title or content or writer or id'})
+        return jsonify({'code': 101, 'message': 'Missing title or content or writer or id or'})
     
     sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'write_poem.sql')
     write_poem = load_sql(sql_file_path)
@@ -106,7 +108,7 @@ def write_poem():
     
     try:
         with connection.cursor() as corsor:
-            corsor.execute(write_poem, (title, content, writer, id))
+            corsor.execute(write_poem, (title, content, writer, id, write_date))
             connection.commit()
     except:
         return jsonify({ 

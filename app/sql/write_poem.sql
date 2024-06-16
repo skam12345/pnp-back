@@ -1,1 +1,1 @@
-INSERT INTO userPoemTable(title, content, writer, id) VALUES(%s, %s, %s, %s);
+INSERT INTO userPoemTable(title, content, writer, id, write_date) VALUES(%s, %s, %s, %s, %s);

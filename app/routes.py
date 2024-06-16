@@ -3,7 +3,7 @@ import pymysql
 import os
 from app.constant import POEM_LIMIT, VIEW_PAGE_LIMIT
 import math
-from datetime import date
+import arrow
 
 
 bp = Blueprint('main', __name__)
@@ -96,7 +96,7 @@ def write_poem():
     content = data.get('content')
     writer = data.get('writer')
     id= data.get('id')
-    write_date = date.today()
+    write_date = arrow.now().format('YYYY-MM-DD HH:mm:ss')
     
     if not title or not content or not writer or not id:
         return jsonify({'code': 101, 'message': 'Missing title or content or writer or id or'})

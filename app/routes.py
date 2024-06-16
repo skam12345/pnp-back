@@ -178,7 +178,7 @@ def read_paging_poem():
                     'poemSeq': data[0],
                     'title': data[1],
                     'writer': data[2],
-                    'write_data': data[3],
+                    'write_date': data[3],
                     'views': data[4],
                     'goods': data[5],
                 })

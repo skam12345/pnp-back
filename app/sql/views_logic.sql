@@ -1,5 +1,5 @@
 -- DBEAVER에 이미 프로시저 등록해놓음
-CREATE PROCEDURE VIEWS_LOGIC (
+CREATE PROCEDURE views_logic (
 	IN pro_viewsId varchar(3000),
 	IN pro_viewsSeq INT,
 	IN pro_now_date DATETIME
@@ -30,5 +30,3 @@ BEGIN
 		WHERE id = pro_viewsId AND poemSeq = pro_viewsSeq;
 	END IF;
 END
-
-CALL VIEWS_LOGIC(%s, %s, %s);

@@ -4,9 +4,20 @@ import os
 from app.constant import POEM_LIMIT, VIEW_PAGE_LIMIT
 import math
 import arrow
+import mysql.connector;
 
 
 bp = Blueprint('main', __name__)
+
+db_config = {
+    'host': 'pnpdb.ctmkgk4os29w.ap-northeast-2.rds.amazonaws.com',
+    'user':'root',
+    'password':'xkzhdizl12',
+    'database': 'pnpDB',
+}
+
+def get_connector_connection():
+    return mysql.connector.connect(**db_config)
 
 def get_db_connection():
     connection = pymysql.connect(
@@ -249,16 +260,13 @@ def user_views():
     
     if not userId or not poemSeq:
         return jsonify('{"code": 101, "message": "Missing userId or poemSeq"}')
-    
-    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'views_logic.sql')
-    update_poem_views = load_sql(sql_file_path)
      
-    connection = get_db_connection()
+    connector = get_connector_connection()
     
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(update_poem_views, (userId, poemSeq, write_date))
-            connection.commit()
+        with connector.cursor() as cursor:
+            cursor.callproc('views_logic', [userId, poemSeq, write_date])
+            connector.commit()
 
     except:
        return jsonify({ 
@@ -267,7 +275,7 @@ def user_views():
         })
        
     finally:
-        connection.close()
+        connector.close()
         
     
     return jsonify({
@@ -284,23 +292,20 @@ def toggle_goods():
     
     if not userId or not poemSeq:
         return jsonify('{"code": 101, "message": "Missing userId or poemSeq"}')
-    
-    sql_file_path = os_path.join(os.path.dirname(__file__), 'sql', 'toggle_goods.sql')
-    toggle_goods = load_sql(sql_file_path)
-    
-    connection = get_db_connection()
+
+    connector = get_connector_connection()
     
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(sql_file_path, (userId, poemSeq, now_date))
-            connection.commit()
+        with connector.cursor() as cursor:
+            cursor.callproc('toggle_like', (userId, poemSeq, now_date))
+            connector.commit()
     except:
         return jsonify({ 
             'code': 501,
             'message': 'Sql Error from occured that wrong some parameters'
         })
     finally:
-        connection.close()
+        connector.close()
         
     return jsonify({
         'code': 200,

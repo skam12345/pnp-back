@@ -47,5 +47,3 @@ BEGIN
         WHERE id = pro_goodsId AND poemSeq = pro_goodsPoemSeq;
     END IF;
 END 
-
-CALL toggle_like(%s, %s, %s);

@@ -250,17 +250,14 @@ def user_views():
     if not userId or not poemSeq:
         return jsonify('{"code": 101, "message": "Missing userId or poemSeq"}')
     
-    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'update_poem_views.sql')
-    insert_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'insert_views_checkId.sql')
+    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'views_logic.sql')
     update_poem_views = load_sql(sql_file_path)
-    insert_views_checkId = load_sql(insert_file_path)
-    
+     
     connection = get_db_connection()
     
     try:
         with connection.cursor() as cursor:
-            cursor.execute(update_poem_views, (userId, userId, peomSeq))
-            cursor.execute(insert_views_checkId, (userId, poemSeq, write_date, userId, poemSeq))
+            cursor.execute(update_poem_views, (userId, poemSeq, write_date))
             connection.commit()
 
     except:

@@ -298,8 +298,8 @@ def toggle_goods():
     cursor = connector.cursor()
     
     try:
-            cursor.callproc('toggle_like', (userId, poemSeq, now_date))
-            connector.commit()
+        cursor.callproc('toggle_like', (userId, poemSeq, now_date))
+        connector.commit()
     except:
         return jsonify({ 
             'code': 501,

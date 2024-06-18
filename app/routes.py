@@ -312,7 +312,7 @@ def toggle_goods():
         'message': 'Toggle Goods Successfully',
     })
 
-@bp.route('/read-goods-status', methods=['POST'])
+@bp.route('/read-goods-stat', methods=['POST'])
 def read_goods_status():
     data = request.json
     id = data.get('id')

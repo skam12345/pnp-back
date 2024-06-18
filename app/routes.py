@@ -326,7 +326,7 @@ def read_goods_status():
     read_goods_status = load_sql(sql_file_path)
     
     connection = get_db_connection()
-    status = false
+    status = False
     try:
         with connection.cursor() as cursor:
             cursor.execute(read_goods_status, (id, poemSeq))

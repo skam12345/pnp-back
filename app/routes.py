@@ -262,9 +262,9 @@ def user_views():
         return jsonify('{"code": 101, "message": "Missing userId or poemSeq"}')
      
     connector = get_connector_connection()
+    cursor = connector.cursor()
     
     try:
-        with connector.cursor() as cursor:
             cursor.callproc('views_logic', [userId, poemSeq, write_date])
             connector.commit()
 
@@ -275,6 +275,7 @@ def user_views():
         })
        
     finally:
+        cursor.close()
         connector.close()
         
     
@@ -294,9 +295,9 @@ def toggle_goods():
         return jsonify('{"code": 101, "message": "Missing userId or poemSeq"}')
 
     connector = get_connector_connection()
+    cursor = connector.cursor()
     
     try:
-        with connector.cursor() as cursor:
             cursor.callproc('toggle_like', (userId, poemSeq, now_date))
             connector.commit()
     except:
@@ -305,6 +306,7 @@ def toggle_goods():
             'message': 'Sql Error from occured that wrong some parameters'
         })
     finally:
+        cursor.close()
         connector.close()
         
     return jsonify({

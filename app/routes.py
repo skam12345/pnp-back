@@ -311,6 +311,42 @@ def toggle_goods():
         'code': 200,
         'message': 'Toggle Goods Successfully',
     })
+
+@bp.route('/read-goods-status', methods=['POST'])
+def read_goods_status():
+    data = request.json
+    id = data.get('id')
+    poemSeq = data.get('poemSeq')
+    
+    if not id or not poemSeq:
+        return jsonify('{"code": 101, "message": "Missing id or poemSeq"}')
+    
+    
+    sql_file_path = os.path.join(os.path.dirname(__file__), 'sql', 'read_goods_status.sql')
+    read_goods_status = load_sql(sql_file_path)
+    
+    connection = get_db_connection()
+    status = false
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(read_goods_status, (id, poemSeq))
+            status = cursor.fetchone()[0]
+    except:
+        return jsonify({ 
+            'code': 501,
+            'message': 'Sql Error from occured that wrong some parameters'
+        })
+    finally:
+        connection.close()
+    
+    return jsonify({
+        'code': 200,
+        'data': {
+            'status': status
+        },
+        'message': 'Read Data Successfully'
+    })
+    
         
     
     
